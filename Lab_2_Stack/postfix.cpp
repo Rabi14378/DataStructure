@@ -29,11 +29,6 @@ void createArray(arr *a,int sz){
   a->p=new char[a->maxsize];
 }
 
-bool isEmpty(st s){
-  if(s.top==-1)
-    return true;
-  return false;
-}
 
 void push(st *s,char data){
   s->p[++(s->top)]=data;
@@ -83,14 +78,15 @@ int main(){
   arr a;
   cout<<"Enter the expression:"<<endl;
   cin>>exp;
+  exp=exp.append(")"); //Adding ) at the end of array.
   len=exp.length();
   createStack(&s,len);
+  push(&s,'(');        //Adding ( at the start of the stack.
   createArray(&a,len);
   
   for(int i=0;i<len;i++){
     if(exp[i]=='(')
       push(&s,exp[i]);
-
 
     else if(exp[i]==')'){
       while(s.p[s.top]!='(')
@@ -98,21 +94,25 @@ int main(){
       pop(&s);
     }
 
-
-
     else if(isOperand(exp[i])){
       insert(&a,exp[i]);
     }
+
     else if(pre(s.p[s.top])>=pre(exp[i])){
       while(pre(s.p[s.top])>=pre(exp[i]))
         insert(&a,pop(&s));
       push(&s,exp[i]);
     }
+
     else{
       push(&s,exp[i]);
     }
+
   }
+
+  exp.pop_back();
   cout<<"The postfix expression of "<<exp<<" is :\n\t\t";
   display(a);
+  
   return 0;
 }
